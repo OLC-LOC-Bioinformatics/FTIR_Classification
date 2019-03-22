@@ -15,6 +15,5 @@ setup(
     author_email="andrew.low@canada.ca",
     url="https://github.com/lowandrew/FTIR_Classification",
     install_requires=['keras',
-                      'numpy',
-                      'sklearn']
+                      'numpy']
 )
