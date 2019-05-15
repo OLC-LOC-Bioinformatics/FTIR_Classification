@@ -3,6 +3,7 @@
 import spc
 import logging
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 
 
@@ -40,7 +41,7 @@ class Spectra:
             self.spectra[i] = self.spectra[i]/norm
         self.status += '_norm'
 
-    def compare(self, other_spectra):
+    def compare(self, other_spectra, start_coordinate=0, end_coordinate=1000000):
         differences = list()
         if len(self.spectra) != len(other_spectra.spectra):
             raise ValueError('Spectra {} has length {}, and spectra {} has length {}. '
@@ -52,5 +53,15 @@ class Spectra:
             logging.warning('Preprocessing done on {} and {} is not the same. Your results probably '
                             'won\'t mean anything!'.format(self.name, other_spectra.name))
         for i in range(len(self.spectra)):
-            differences.append(self.spectra[i] - other_spectra.spectra[i])
-        return np.mean(differences), np.std(differences) 
+            if start_coordinate <= self.x_values[i] <= end_coordinate:  # Not very efficient, but that shouldn't matter
+                differences.append(abs(self.spectra[i] - other_spectra.spectra[i]))
+        return np.mean(differences), np.std(differences)
+
+    def plot_spectra(self, output_file=None, clear_figure=True, add_legend=True):
+        plt.plot(self.x_values, self.spectra, label=self.name + '_' + self.status)
+        if output_file is not None:
+            if add_legend is True:
+                plt.legend(fontsize='xx-small')
+            plt.savefig(output_file)
+        if clear_figure is True:
+            plt.close()
