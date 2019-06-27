@@ -15,9 +15,9 @@ class Spectra:
         self.name = self.spc_file
         self.spectra = list()
         self.x_values = list()
-        self.read_file()
+        self._read_file()
     
-    def read_file(self):
+    def _read_file(self):
         """
         Reads a raw SPC file, updates the self.spectra attribute to have the raw y values for each index in the spectra
         file
@@ -34,12 +34,14 @@ class Spectra:
             logging.warning('Derivatives of order >2 are absolutely not recommended! Use at your own risk.')
         self.spectra = savgol_filter(self.spectra, window_length=5, polyorder=3, deriv=derivative_order)
         self.status += '_deriv{}'.format(derivative_order)
+        return self
     
     def normalize(self):
         norm = np.linalg.norm(self.spectra)
         for i in range(len(self.spectra)):
             self.spectra[i] = self.spectra[i]/norm
         self.status += '_norm'
+        return self
 
     def compare(self, other_spectra, start_coordinate=0, end_coordinate=1000000):
         differences = list()
