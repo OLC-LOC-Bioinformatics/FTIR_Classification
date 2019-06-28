@@ -67,3 +67,14 @@ class Spectra:
             plt.savefig(output_file)
         if clear_figure is True:
             plt.close()
+
+    def subset_spectra(self, start_coordinate, end_coordinate):
+        spectra_subset = list()
+        xvalues_subset = list()
+        for i in range(len(self.spectra)):
+            if start_coordinate <= self.x_values[i] <= end_coordinate:  # Not very efficient, but that shouldn't matter
+                spectra_subset.append(self.spectra[i])
+                xvalues_subset.append(self.spectra[i])
+        self.spectra = spectra_subset
+        self.x_values = xvalues_subset
+        return self
